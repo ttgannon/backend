@@ -17,12 +17,6 @@ CREATE TABLE planets
   moons TEXT[]
 );
 
-CREATE TABLE moons
-(
-  id SERIAL PRIMARY KEY,
-  moon_id INTEGER REFERENCES moons
-);
-
 
 INSERT INTO planets
   (name, orbital_period_in_years, orbits_around, galaxy, moons)
