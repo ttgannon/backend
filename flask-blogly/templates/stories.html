@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+    Stories
+{% endblock %}
+
+
+{% block body %}
+<div class="container-fluid">
+    <h1>all stories</h1>
+</div>
+    {% if stories %}
+        <ul>
+            {% for story in stories %}
+                <li><a href="/posts/{{story.id}}">{{story.story_name}}, by {{story.author.first_name}}</a></li>    
+            {% endfor %}
+        </ul>
+        
+    {% endif %}
+    
+
+{% endblock %}

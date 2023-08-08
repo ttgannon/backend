@@ -12,9 +12,15 @@
 
 <form action="{{'/users/' ~ user.id ~ '/posts/new'}}" method="POST">
     <input type="text" name="title" placeholder="Title">
-    <input type="text" name="content" placeholder="Content">
-    <a href="{{ url_for('user_page', user_id=user.id) }}" class="btn">Cancel</button>
+    <input type="text" name="content" placeholder="Content"><br>
+    <h4>
+        Tag your story so others can find it:
+    </h4>
+    {% for tag in tags %}
+        <input type="checkbox" name="tags_html" value="{{ tag.id }}">{{tag.name}}
+    {% endfor %}<br>
     <button type="submit">Add Post</button>
+    <a href="{{ url_for('user_page', user_id=user.id) }}">Cancel</a>
 </form>
 
 {% else %}

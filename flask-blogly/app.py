@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, render_template, request, redirect
-from models import db, connect_db, User, Story
+from models import db, connect_db, User, Story, PostTag, Tag
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -22,11 +22,15 @@ db.create_all()
 
 @app.route("/")
 def home_page():
+    return render_template('home.html')
+
+@app.route("/users")
+def users():
     userlist = User.query.all()
     return render_template("users.html", userlist = userlist)
 
 @app.route("/users/new", methods=['GET','POST'])
-def users():
+def new_users():
     if request.method == 'GET':
         return render_template('users_form.html')
     elif request.method == 'POST':
@@ -38,7 +42,7 @@ def users():
         db.session.add(new_user)
         db.session.commit()
 
-        return redirect("/")
+        return redirect("/users")
 
 @app.route('/users/<user_id>')
 def user_page(user_id):
@@ -68,21 +72,30 @@ def delete_user(user_id):
     user = User.query.get(user_id)
     db.session.delete(user)
     db.session.commit()
-    return redirect('/')
+    return redirect('/users')
 
 @app.route('/users/<user_id>/posts/new', methods=['GET','POST'])
 def go_to_new_post(user_id):
-    user = User.query.get(user_id)
     if request.method == 'GET':
-        return render_template('add_post.html', user=user)
+        user = User.query.get(user_id)
+        tags = Tag.query.all()
+        return render_template('add_post.html', user=user, tags=tags)
     
     
     content = request.form['content']
     title = request.form['title']
+    tag_id = request.form.getlist('tags_html')
+    print('--------------------', tag_id)
     
-    new_story = Story(story_name=title, story_content=content, author=user)
-
+    new_story = Story(story_name=title, story_content=content, author_id=user_id)
     db.session.add(new_story)
+    db.session.commit()
+
+    for id in tag_id:
+        new_post_tag = PostTag(post_id=new_story.id, tag_id=id)
+        db.session.add(new_post_tag)
+
+    
     db.session.commit()
     
     return redirect(f'/users/{user_id}')
@@ -112,3 +125,49 @@ def edit_post(post_id):
     db.session.commit()
 
     return redirect(f'/posts/{post.id}')
+
+@app.route('/tags')
+def get_tags():
+    tags = Tag.query.all()
+    return render_template('tags.html', tags=tags)
+
+@app.route('/tags/<tag_id>')
+def tag_id(tag_id):
+    tag = Tag.query.get(tag_id)
+    return render_template('tag.html', tag=tag)
+
+@app.route('/tags/<tag_id>/edit', methods=['GET','POST'])
+def edit_tag(tag_id):
+    if request.method == 'GET':
+        tag = Tag.query.get(tag_id)
+        request.method = 'POST'
+        return render_template('tag.html', tag=tag, request=request)
+    tag = Tag.query.get(tag_id)
+    tag.name = request.form['tag']
+    db.session.commit()
+    return redirect(f'/tags/{tag_id}')
+
+@app.route('/tags/new', methods=['GET','POST'])
+def new_tags():
+    if request.method == 'GET':
+        return render_template('new_tag.html')
+    
+    tag = request.form['tag']
+
+    new_tag = Tag(name=tag)
+
+    db.session.add(new_tag)
+    db.session.commit()
+    return redirect('/tags')
+
+@app.route('/tags/<tag_id>/delete', methods=['GET','POST'])
+def delete_tag(tag_id):
+    tag = Tag.query.get(tag_id)
+    db.session.delete(tag)
+    db.session.commit()
+    return redirect('/tags')
+
+@app.route('/stories')
+def show_stories():
+    stories = Story.query.all()
+    return render_template('stories.html', stories=stories)

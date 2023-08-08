@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}
+    Tag '{{tag.name}}'
+{% endblock %}
+
+
+{% block body %}
+{% if request.method == 'GET' %}
+<h1>{{tag.name}}</h1>
+<h2>Stories tagged '{{tag.name}}':</h2>
+<ul>
+    {% for story in tag.posts_with_tag %}
+    <li>
+        {{story.tags.story_name}}
+    </li>
+    {% endfor %}
+</ul>
+<form action="{{'/tags/'~tag.id~'/edit'}}">
+    <button class="btn btn-success">Edit Tag</button>
+</form>
+<form action="{{'/tags/'~tag.id~'/delete'}}" methods="POST">
+    <button class="btn btn-danger">Delete Tag</button>
+</form>
+
+{% else %}
+<form action="{{'/tags/'~tag.id~'/edit'}}" method="POST">
+    <input type="text" value="{{tag.name}}" name="tag">
+    <button class="btn btn-success">Submit</button>
+</form>
+{% endif %}
+
+{% endblock %}
