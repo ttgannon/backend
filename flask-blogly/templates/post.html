@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{post.story_name}}
+{% endblock %}
+
+
+{% block body %}
+
+<h1>{{post.story_name}}</h1>
+<h2>
+    {{post.story_content}}
+</h2>
+<form action="{{'/posts/' ~ post.id ~ '/delete'}}">
+    <button type="submit">
+        Delete
+    </button>
+</form>
+<form action="{{'/posts/' ~ post.id ~ '/edit'}}">
+    <button type="submit">
+        Edit
+    </button>
+</form>
+<form action="">
+    <button type="submit">
+        Cancel
+    </button>
+</form>
+
+{% endblock %}
