@@ -5,25 +5,37 @@
 
 
 {% block body %}
+<div class='container'>
+    <h1>{{post.story_name}}</h1>
+    <h5>Authored by {{post.author.first_name}}</h4>
+    <div class="card">
+        <div class="card-body">
+            {{post.story_content}}
+        </div>
+    </div>
+    <div class="d-flex">
+        <p class="mr-0 fw-bold">Tags:</p>
+        <ul class="unstyled ml-0 pl-0" style="padding-left: 0.5rem;">
+            {% for tag in post.tags %}
+            <li class="badge text-bg-primary">{{tag.posts.name}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="d-flex" style="margin-top: 5px;">
+        <form action="{{'/posts/' ~ post.id ~ '/delete'}}">
+            <button class='mx-1 btn btn-danger' type="submit">
+                Delete
+            </button>
+        </form>
+        <form action="{{'/posts/' ~ post.id ~ '/edit'}}">
+            <button class='mx-1 btn btn-success' type="submit">
+                Edit
+            </button>
+        </form>
+    </div>
+    
 
-<h1>{{post.story_name}}</h1>
-<h2>
-    {{post.story_content}}
-</h2>
-<form action="{{'/posts/' ~ post.id ~ '/delete'}}">
-    <button type="submit">
-        Delete
-    </button>
-</form>
-<form action="{{'/posts/' ~ post.id ~ '/edit'}}">
-    <button type="submit">
-        Edit
-    </button>
-</form>
-<form action="">
-    <button type="submit">
-        Cancel
-    </button>
-</form>
+</div>
+
 
 {% endblock %}

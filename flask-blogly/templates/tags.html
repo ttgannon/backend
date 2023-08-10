@@ -5,19 +5,32 @@
 
 
 {% block body %}
-<div class="container-fluid">
+<div class="container" style="margin-left: 20rem;">
+
     <h1>Tags</h1>
-</div>
+
     {% if tags %}
         <ul>
             {% for tag in tags %}
                 <li><a href="/tags/{{tag.id}}">{{tag.name}}</a></li>    
             {% endfor %}
         </ul>
-        
-    {% endif %}
+
+        <form action="/tags/new">
+            <button class="btn btn-success">New Tag</button>
+        </form>
+
+    {% else %}
+    <h2 class="fw-light">No tags have been created.</h2>
+
     <form action="/tags/new">
-        <button class="btn btn-success">New Tag</button>
+        <button class="btn btn-success">Create One!</button>
     </form>
+
+    {% endif %}
+</div>
+
+
+    
 
 {% endblock %}

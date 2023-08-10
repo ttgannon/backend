@@ -5,7 +5,8 @@
 
 
 {% block body %}
-{% if not user %}
+<div class="container">
+    {% if not user %}
     <h1>
         Create New User
     </h1>
@@ -20,10 +21,12 @@
         <input type="text" name="last_name" placeholder="Enter a last name" value="{{ user.last_name if user is not undefined else '' }}">
         <input type="url" name="img_url" placeholder="Enter URL for image of this user" value="{{ user.image_url if user is not undefined else '' }}">
         {% if user %}
-        <button type="submit">Update</button>
+        <button class='btn btn-primary' type="submit">Update</button>
         {% else %}
-        <button type="submit">Add</button>
+        <button class='btn btn-success' type="submit">Add</button>
         {% endif %}
     </form>
+</div>
+
 
 {% endblock %}

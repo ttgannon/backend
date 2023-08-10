@@ -5,17 +5,18 @@
 
 
 {% block body %}
-<div class="container-fluid">
+<div class="container">
     <h1>all stories</h1>
-</div>
     {% if stories %}
-        <ul>
-            {% for story in stories %}
-                <li><a href="/posts/{{story.id}}">{{story.story_name}}, by {{story.author.first_name}}</a></li>    
-            {% endfor %}
-        </ul>
-        
-    {% endif %}
+    <ul>
+        {% for story in stories %}
+            <li><a href="/posts/{{story.id}}">{{story.story_name}}, by {{story.author.first_name}}</a></li>    
+        {% endfor %}
+    </ul>
     
+{% endif %}
+
+</div>
+
 
 {% endblock %}

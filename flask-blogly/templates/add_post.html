@@ -6,34 +6,44 @@
 
 {% block body %}
 {% if not post %} 
-<h1>
-    Add Post for {{user.first_name + ' ' + user.last_name}} 
-</h1>
+<div class="container">
 
-<form action="{{'/users/' ~ user.id ~ '/posts/new'}}" method="POST">
-    <input type="text" name="title" placeholder="Title">
-    <input type="text" name="content" placeholder="Content"><br>
-    <h4>
-        Tag your story so others can find it:
-    </h4>
-    {% for tag in tags %}
-        <input type="checkbox" name="tags_html" value="{{ tag.id }}">{{tag.name}}
-    {% endfor %}<br>
-    <button type="submit">Add Post</button>
-    <a href="{{ url_for('user_page', user_id=user.id) }}">Cancel</a>
-</form>
+    <h1>
+        Add Post for {{user.first_name + ' ' + user.last_name}} 
+    </h1>
+    
+    <form action="{{'/users/' ~ user.id ~ '/posts/new'}}" method="POST">
+        <input type="text" name="title" placeholder="Title">
+        <input type="text" name="content" placeholder="Content"><br>
+        <h4>
+            Tag your story so others can find it:
+        </h4>
+        {% for tag in tags %}
+            <input type="checkbox" name="tags_html" value="{{ tag.id }}">{{tag.name}}
+        {% endfor %}<br>
+        <button class='btn btn-primary' type="submit">Add Post</button>
+        <a href="{{ url_for('user_page', user_id=user.id) }}">Cancel</a>
+    </form>
+</div>
 
 {% else %}
-<h1>
-   Edit Post "{{post.story_name}}"
-</h1>
+<div class="container">
+    <h1>
+        Edit Post "{{post.story_name}}"
+     </h1>
+        <div class="d-flex">
+            <form action="{{'/posts/' ~ post.id ~ '/edit'}}" method="POST">
+                <p style="margin-bottom:0;">Title</p>
+                <input type="text" name="title" placeholder="Title" value='{{ post.story_name if post is not undefined else "" }}' style="margin-bottom: 5px;"><br>
+                <p style="margin-bottom:0;">Content</p>
+                <textarea type="text" name="content" placeholder="Content" value='{{ post.story_content if post is not undefined else "" }}' style="margin-bottom: 5px;"></textarea><br>
+                <button class='mx-1 btn btn-success' type="submit" style="margin-top: 5px;">Update Post</button>
+                <a href="{{ '/posts/' ~ post.id }}" class="mx-1 btn btn-danger" style="margin-top: 5px;">Cancel</a>
+            </form>            
+        </div>
+</div>
 
-<form action="{{'/posts/' ~ post.id ~ '/edit'}}" method="POST">
-    <input type="text" name="title" placeholder="Title" value='{{ post.story_name if post is not undefined else "" }}'>
-    <input type="text" name="content" placeholder="Content" value='{{ post.story_content if post is not undefined else "" }}'>
-    <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn">Cancel</button>
-    <button type="submit">Update Post</button>
-</form>
+
 
 
 {% endif %}

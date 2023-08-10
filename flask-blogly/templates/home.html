@@ -5,8 +5,39 @@
 
 
 {% block body %}
-<div class="container-fluid">
-    <h1>welcome to blog.ly</h1>
+<div class="container-fluid header">
+    <h1 class="display-1 text-center $display-font-weight: 300"><strong>welcome to blog.ly</strong></h1>
 </div>    
+
+<div class="container" style="margin-bottom: 3rem; margin-top: 3rem;">
+    <h2 class="row">Our Most Recent Stories</h2>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        {% for story in stories %}
+        <div class="col-md-4">
+            <div class="card mb-4" style="width: 18rem;">
+                <img src="{{ story.author.image_url }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h3 class="card-title">{{story.story_name}}</h3>
+                        <p class="card-text">
+                            {% if story.story_content|length > 50 %}
+                                {{ story.story_content[:50] ~ '...' }}
+                            {% else %}
+                                {{ story.story_content }}
+                            {% endif %}
+                        </p>
+                        <a href="/posts/{{ story.id }}" class="btn btn-primary">Read this story</a>
+                    </div>
+                <p class="card-text" style="padding-left: 1rem; padding-bottom: 1rem; font-size: smaller;">By {{story.author.first_name}} on {{ story.publish_time.strftime('%B %d, %Y %I:%M %p') }}</p>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+    
+
 
 {% endblock %}

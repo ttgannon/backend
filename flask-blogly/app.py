@@ -1,7 +1,7 @@
 """Blogly application."""
 
-from flask import Flask, render_template, request, redirect
-from models import db, connect_db, User, Story, PostTag, Tag
+from flask import Flask, render_template, request, redirect, flash
+from models import db, connect_db, User, Story, PostTag, Tag, default_picture
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -22,7 +22,8 @@ db.create_all()
 
 @app.route("/")
 def home_page():
-    return render_template('home.html')
+    stories = Story.query.order_by(Story.publish_time.desc()).limit(5).all()
+    return render_template('home.html', stories=stories)
 
 @app.route("/users")
 def users():
@@ -38,7 +39,11 @@ def new_users():
         lname = request.form['last_name']
         prof_pic = request.form['img_url']
         
+        if prof_pic == '':
+            prof_pic = default_picture
+
         new_user = User(first_name=fname, last_name=lname, image_url=prof_pic)
+        
         db.session.add(new_user)
         db.session.commit()
 
@@ -84,13 +89,17 @@ def go_to_new_post(user_id):
     
     content = request.form['content']
     title = request.form['title']
+
+    if content == '' or title == '':
+        return redirect(f'/users/{user_id}/posts/new')
+
     tag_id = request.form.getlist('tags_html')
-    print('--------------------', tag_id)
     
     new_story = Story(story_name=title, story_content=content, author_id=user_id)
     db.session.add(new_story)
     db.session.commit()
 
+    #should probably fix to not run all these queries?
     for id in tag_id:
         new_post_tag = PostTag(post_id=new_story.id, tag_id=id)
         db.session.add(new_post_tag)
@@ -153,7 +162,9 @@ def new_tags():
         return render_template('new_tag.html')
     
     tag = request.form['tag']
-
+    if Tag.query.filter_by(name=tag).first():
+        flash(f'The tag "{tag}" already exists', 'warning')
+        return redirect('/tags/new')
     new_tag = Tag(name=tag)
 
     db.session.add(new_tag)

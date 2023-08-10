@@ -5,12 +5,22 @@
 
 
 {% block body %}
-<div class="container-fluid">
+<div class="container">
     <h1>Tags</h1>
-</div>
     <form action="/tags/new" method="POST">
         <input type="text" name="tag">
         <button class="btn btn-success">Add Tag</button>
     </form>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-danger" role="alert" style="margin-right: 65rem; margin-top: 20px;">
+        <span style="font-weight: bold;">Wait:</span> {{messages[0]}}.
+    </div>
+    {% endif %}
+    {% endwith %}
+
+</div>
+    
 
 {% endblock %}
