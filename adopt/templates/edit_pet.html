@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}{{form.name.data}}{% endblock %}
+
+{% block content %}
+<h1>Edit pet</h1>
+    <form action='/edit/{{pet.id}}' method="POST">
+        <!-- contain hidden_tag for CSRF security -->
+        {{form.hidden_tag()}}
+        {% for field in form 
+                if field.widget.input_type != 'hidden' %}
+            <p>
+                {{field.label}}
+                {{field}}
+            </p>
+        {% endfor %}
+        <button>Save</button>
+    </form>
+
+{% endblock %}
+
+
+
