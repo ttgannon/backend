@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endwith %}
+
+<h1>{{user.username}}</h1>
+<form style='display: inline;' action="/users/{{user.username}}/delete" method="POST">
+    <button>Delete User</button>
+</form>
+
+<h3>{{user.email}}</h3>
+<h3>{{user.first_name}}</h3>
+<h3>{{user.last_name}}</h3>
+{% if user.feedback %}
+{% for item in user.feedback %}
+<h3>
+    {{item.title}} 
+    <form style='display: inline;' action="/feedback/{{item.id}}/update" method="GET">
+        <button>Edit</button>
+    </form>
+    <form style='display: inline;' action="/feedback/{{item.id}}/delete" method="POST">
+        <button>Delete</button>
+    </form>
+</h3>
+{% endfor %}
+{% endif %}
+
+{% endblock %}
